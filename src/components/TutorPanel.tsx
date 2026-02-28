@@ -1,67 +1,131 @@
-import { motion } from "framer-motion";
-import { CheckSquare, RotateCcw, Clock } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Bot, Sparkles, Search } from "lucide-react";
 
-interface TutorPanelProps {
-  problem: {
-    text: string;
-    latex: string;
-  };
-  time: number;
-  onMarkDone: () => void;
-  onSolveAgain: () => void;
+interface Message {
+  id: number;
+  text: string;
+  from: "tutor" | "system";
 }
 
-const formatTime = (seconds: number) => {
-  const m = Math.floor(seconds / 60).toString().padStart(2, "0");
-  const s = (seconds % 60).toString().padStart(2, "0");
-  return `${m}:${s}`;
-};
+interface TutorPanelProps {
+  step: number;
+  setStep: (step: number) => void;
+}
 
-const TutorPanel = ({ problem, time, onMarkDone, onSolveAgain }: TutorPanelProps) => {
+const TutorPanel = ({ step, setStep }: TutorPanelProps) => {
+  const [messages, setMessages] = useState<Message[]>([
+    { id: 1, text: "Hello! I'm your Fermi tutor. Let's work through this problem together.", from: "tutor" },
+  ]);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Step 6 → add glow to "Check my work" button
+  // Step 7 → append tutor message
+  useEffect(() => {
+    if (step === 7) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now(),
+          text: "Great correction! Since b + c = −a, try substituting −a into the denominator of the first fraction.",
+          from: "tutor",
+        },
+      ]);
+    }
+  }, [step]);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [messages]);
+
+  const handleCheckWork = () => {
+    if (step === 6) {
+      setStep(7);
+    }
+  };
+
+  const handleGuideMe = () => {
+    setMessages((prev) => [
+      ...prev,
+      { id: Date.now(), text: "Let's take it step by step. What do you notice about b + c?", from: "tutor" },
+    ]);
+  };
+
   return (
-    <motion.div
-      initial={{ y: -20, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      className="problem-card rounded-2xl px-6 py-5 mx-6 mt-4"
-    >
-      <div className="flex items-start justify-between gap-4">
-        {/* Problem content */}
-        <div className="flex-1 min-w-0">
-          <p className="text-base leading-relaxed text-foreground" style={{ fontFamily: "var(--font-sans)" }}>
-            {problem.text}
-          </p>
-          <p className="mt-1 text-lg font-medium text-foreground" style={{ fontFamily: "var(--font-mono)" }}>
-            {problem.latex}
-          </p>
+    <Card className="h-full rounded-none border-t-0 border-b-0 border-l-0 flex flex-col">
+      <CardHeader className="pb-3 border-b border-border">
+        <div className="flex items-center gap-3">
+          <div className="relative">
+            <Avatar className="h-10 w-10 bg-accent">
+              <AvatarFallback className="bg-accent text-accent-foreground">
+                <Bot size={20} />
+              </AvatarFallback>
+            </Avatar>
+            {step >= 7 && (
+              <Badge className="absolute -top-1 -right-2 text-[10px] px-1.5 py-0 bg-green-500 text-white border-0">
+                Nice work!
+              </Badge>
+            )}
+          </div>
+          <div>
+            <CardTitle className="text-base">Chatting with Fermi tutor</CardTitle>
+            <p className="text-xs text-muted-foreground">AI-powered math assistant</p>
+          </div>
         </div>
+      </CardHeader>
 
-        {/* Actions */}
-        <div className="flex items-center gap-2 shrink-0">
-          <button
-            onClick={onMarkDone}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-border text-sm font-medium text-foreground hover:bg-secondary transition-colors"
+      <CardContent className="flex-1 flex flex-col p-0 overflow-hidden">
+        {/* Messages */}
+        <ScrollArea className="flex-1 p-4" ref={scrollRef}>
+          <div className="space-y-3">
+            <AnimatePresence initial={false}>
+              {messages.map((msg) => (
+                <motion.div
+                  key={msg.id}
+                  initial={{ y: 10, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                  className={`rounded-xl px-4 py-3 text-sm leading-relaxed ${
+                    msg.from === "tutor"
+                      ? "bg-accent text-accent-foreground"
+                      : "bg-secondary text-secondary-foreground"
+                  }`}
+                >
+                  {msg.text}
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
+        </ScrollArea>
+
+        {/* Action buttons */}
+        <div className="p-4 border-t border-border flex gap-2">
+          <Button
+            variant="outline"
+            className={`flex-1 gap-2 ${step === 6 ? "animate-pulse ring-2 ring-primary ring-offset-2" : ""}`}
+            onClick={handleCheckWork}
           >
-            <CheckSquare size={16} />
-            Mark as Done
-          </button>
-          <button
-            onClick={onSolveAgain}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-primary text-sm font-medium text-primary hover:bg-accent transition-colors"
+            <Search size={16} />
+            Check my work
+          </Button>
+          <Button
+            variant="secondary"
+            className="flex-1 gap-2"
+            onClick={handleGuideMe}
           >
-            <RotateCcw size={16} />
-            Solve Again
-          </button>
+            <Sparkles size={16} />
+            Guide me
+          </Button>
         </div>
-      </div>
-
-      {/* Timer */}
-      <div className="absolute top-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 text-muted-foreground text-sm">
-        <Clock size={14} />
-        <span style={{ fontFamily: "var(--font-mono)" }}>
-          Time: {formatTime(time)}
-        </span>
-      </div>
-    </motion.div>
+      </CardContent>
+    </Card>
   );
 };
 
