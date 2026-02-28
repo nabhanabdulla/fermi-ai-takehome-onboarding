@@ -1,7 +1,8 @@
-import { useRef, useState, useCallback } from "react";
-import { Stage, Layer, Line } from "react-konva";
+import { useRef, useState, useCallback, useEffect } from "react";
+import { Stage, Layer, Line, Text, Rect, Circle } from "react-konva";
 import { motion } from "framer-motion";
 import { Pen, Eraser, Undo2, Redo2 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import Konva from "konva";
 
 interface LineData {
@@ -12,15 +13,46 @@ interface LineData {
 }
 
 interface CanvasBoardProps {
-  width: number;
-  height: number;
+  step: number;
+  onErrorClick: () => void;
+  corrected: boolean;
 }
 
-const CanvasBoard = ({ width, height }: CanvasBoardProps) => {
+const useContainerSize = (ref: React.RefObject<HTMLDivElement>) => {
+  const [size, setSize] = useState({ width: 800, height: 600 });
+  useEffect(() => {
+    if (!ref.current) return;
+    const ro = new ResizeObserver((entries) => {
+      const { width, height } = entries[0].contentRect;
+      setSize({ width, height });
+    });
+    ro.observe(ref.current);
+    return () => ro.disconnect();
+  }, [ref]);
+  return size;
+};
+
+const CanvasBoard = ({ step, onErrorClick, corrected }: CanvasBoardProps) => {
+  const containerRef = useRef<HTMLDivElement>(null!);
+  const { width, height } = useContainerSize(containerRef);
   const [lines, setLines] = useState<LineData[]>([]);
   const [redoStack, setRedoStack] = useState<LineData[]>([]);
   const [tool, setTool] = useState<"pen" | "eraser">("pen");
   const isDrawing = useRef(false);
+  const [pulseRadius, setPulseRadius] = useState(12);
+  const pulseRef = useRef<Konva.Circle>(null);
+
+  // Pulse animation for error dot
+  useEffect(() => {
+    if (step !== 3 || !pulseRef.current) return;
+    const anim = new Konva.Animation((frame) => {
+      if (!frame) return;
+      const scale = 1 + 0.3 * Math.sin((frame.time / 400) * Math.PI);
+      setPulseRadius(12 * scale);
+    }, pulseRef.current.getLayer());
+    anim.start();
+    return () => { anim.stop(); };
+  }, [step]);
 
   const handleMouseDown = useCallback((e: Konva.KonvaEventObject<MouseEvent | TouchEvent>) => {
     isDrawing.current = true;
@@ -65,18 +97,29 @@ const CanvasBoard = ({ width, height }: CanvasBoardProps) => {
     setRedoStack((prev) => prev.slice(1));
   };
 
-  const clear = () => {
-    setLines([]);
-    setRedoStack([]);
-  };
+  // Math text positions
+  const textX = 80;
+  const textY = 60;
+  const lineHeight = 40;
+  const mathLines = [
+    "b + c = -1005 - 1007",
+    "= -2012",
+    corrected ? "= -a" : "= a",
+  ];
+
+  const lastLineY = textY + (mathLines.length - 1) * lineHeight;
 
   const tools = [
     { id: "pen" as const, icon: Pen, label: "Pen" },
     { id: "eraser" as const, icon: Eraser, label: "Eraser" },
   ];
 
+  // Error dot position
+  const dotX = width - 60;
+  const dotY = lastLineY + 10;
+
   return (
-    <div className="relative w-full h-full canvas-dots">
+    <div ref={containerRef} className="relative w-full h-full canvas-dots">
       <Stage
         width={width}
         height={height}
@@ -89,6 +132,34 @@ const CanvasBoard = ({ width, height }: CanvasBoardProps) => {
         style={{ cursor: tool === "eraser" ? "cell" : "crosshair" }}
       >
         <Layer>
+          {/* Handwritten math text */}
+          {mathLines.map((text, i) => (
+            <Text
+              key={i}
+              x={textX}
+              y={textY + i * lineHeight}
+              text={text}
+              fontSize={24}
+              fontFamily="'Patrick Hand', cursive"
+              fill="#2d3748"
+            />
+          ))}
+
+          {/* Dashed highlight rect around last line when step >= 2 and not corrected */}
+          {step >= 2 && !corrected && (
+            <Rect
+              x={textX - 8}
+              y={lastLineY - 6}
+              width={120}
+              height={36}
+              stroke="#e53e3e"
+              strokeWidth={1.5}
+              dash={[6, 4]}
+              cornerRadius={6}
+            />
+          )}
+
+          {/* User-drawn lines */}
           {lines.map((line, i) => (
             <Line
               key={i}
@@ -103,8 +174,37 @@ const CanvasBoard = ({ width, height }: CanvasBoardProps) => {
               }
             />
           ))}
+
+          {/* Yellow error dot at step 3 */}
+          {step === 3 && (
+            <Circle
+              ref={pulseRef}
+              x={dotX}
+              y={dotY}
+              radius={pulseRadius}
+              fill="#ECC94B"
+              shadowColor="#ECC94B"
+              shadowBlur={16}
+              shadowOpacity={0.5}
+              onClick={() => onErrorClick()}
+              onTap={() => onErrorClick()}
+              style={{ cursor: "pointer" }}
+            />
+          )}
         </Layer>
       </Stage>
+
+      {/* Error badge at step 3 */}
+      {step === 3 && (
+        <>
+          <Badge className="absolute top-4 right-4 bg-amber-500 text-white border-0">
+            Error noticed
+          </Badge>
+          <div className="absolute bottom-20 right-6 bg-card border border-border rounded-lg px-3 py-2 text-sm text-muted-foreground shadow-md">
+            Tap the yellow dot to see feedback
+          </div>
+        </>
+      )}
 
       {/* Bottom-left toolbar */}
       <motion.div
@@ -129,7 +229,7 @@ const CanvasBoard = ({ width, height }: CanvasBoardProps) => {
         ))}
       </motion.div>
 
-      {/* Bottom-right actions */}
+      {/* Bottom-right undo/redo */}
       <motion.div
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -151,13 +251,6 @@ const CanvasBoard = ({ width, height }: CanvasBoardProps) => {
           title="Redo"
         >
           <Redo2 size={18} />
-        </button>
-        <button
-          onClick={clear}
-          className="p-2.5 rounded-xl text-muted-foreground hover:bg-destructive hover:text-destructive-foreground transition-all"
-          title="Clear"
-        >
-          <Eraser size={18} />
         </button>
       </motion.div>
     </div>
