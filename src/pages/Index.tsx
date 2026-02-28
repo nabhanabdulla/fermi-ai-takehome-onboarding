@@ -1,8 +1,11 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { AnimatePresence } from "framer-motion";
 import CanvasBoard from "@/components/CanvasBoard";
 import TutorPanel from "@/components/TutorPanel";
+import QuestionCard from "@/components/QuestionCard";
 import OnboardingOverlay from "@/components/OnboardingOverlay";
+import { Button } from "@/components/ui/button";
+import { CheckSquare, RotateCcw } from "lucide-react";
 
 const problems = [
   {
@@ -19,24 +22,30 @@ const problems = [
   },
 ];
 
-const useWindowSize = () => {
-  const [size, setSize] = useState({ width: window.innerWidth, height: window.innerHeight });
-  useEffect(() => {
-    const handle = () => setSize({ width: window.innerWidth, height: window.innerHeight });
-    window.addEventListener("resize", handle);
-    return () => window.removeEventListener("resize", handle);
-  }, []);
-  return size;
-};
-
 const Index = () => {
+  const [step, setStep] = useState(1);
   const [onboardingStep, setOnboardingStep] = useState(0);
   const [showOnboarding, setShowOnboarding] = useState(true);
   const [problemIndex, setProblemIndex] = useState(0);
   const [time, setTime] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
-  const { width, height } = useWindowSize();
+  const canvasContainerRef = useRef<HTMLDivElement>(null);
+  const [canvasSize, setCanvasSize] = useState({ width: 800, height: 600 });
 
+  // Measure canvas container
+  useEffect(() => {
+    const measure = () => {
+      if (canvasContainerRef.current) {
+        const rect = canvasContainerRef.current.getBoundingClientRect();
+        setCanvasSize({ width: rect.width, height: rect.height });
+      }
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [showOnboarding]);
+
+  // Timer
   useEffect(() => {
     if (!isRunning) return;
     const interval = setInterval(() => setTime((t) => t + 1), 1000);
@@ -60,6 +69,7 @@ const Index = () => {
     setIsRunning(false);
     setProblemIndex((i) => (i + 1) % problems.length);
     setTime(0);
+    setStep((s) => Math.min(s + 1, 3));
     setTimeout(() => setIsRunning(true), 100);
   };
 
@@ -68,23 +78,36 @@ const Index = () => {
   };
 
   return (
-    <div className="h-screen w-screen flex flex-col overflow-hidden bg-background">
-      {/* Top bar with timer */}
-      <header className="relative z-10">
-        <TutorPanel
-          problem={problems[problemIndex]}
-          time={time}
-          onMarkDone={handleMarkDone}
-          onSolveAgain={handleSolveAgain}
-        />
-      </header>
+    <div className="h-screen w-screen flex overflow-hidden bg-background">
+      {/* Left: Tutor Panel (fixed 360px) */}
+      <TutorPanel time={time} step={step} />
 
-      {/* Canvas area */}
-      <main className="flex-1 relative">
-        <CanvasBoard width={width} height={height - 120} />
-      </main>
+      {/* Center + Right: Main area */}
+      <div className="flex-1 flex flex-col min-w-0">
+        {/* Top bar: Question card center + Mark as Done right */}
+        <header className="flex items-start gap-4 px-5 pt-4 pb-2 z-10">
+          <div className="flex-1 min-w-0">
+            <QuestionCard problem={problems[problemIndex]} time={time} />
+          </div>
+          <div className="flex items-center gap-2 shrink-0 pt-1">
+            <Button variant="outline" size="sm" onClick={handleMarkDone}>
+              <CheckSquare size={16} className="mr-1.5" />
+              Mark as Done
+            </Button>
+            <Button variant="ghost" size="sm" onClick={handleSolveAgain}>
+              <RotateCcw size={16} className="mr-1.5" />
+              Solve Again
+            </Button>
+          </div>
+        </header>
 
-      {/* Onboarding */}
+        {/* Canvas area */}
+        <div ref={canvasContainerRef} className="flex-1 relative">
+          <CanvasBoard width={canvasSize.width} height={canvasSize.height} />
+        </div>
+      </div>
+
+      {/* Onboarding overlay */}
       <AnimatePresence>
         {showOnboarding && (
           <OnboardingOverlay
