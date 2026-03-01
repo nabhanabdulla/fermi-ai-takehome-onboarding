@@ -338,7 +338,7 @@ const CanvasBoard = ({ step, setStep, onErrorClick, corrected }: CanvasBoardProp
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.3 }}
-        className="absolute bottom-6 left-6 toolbar-float rounded-2xl px-2 py-2 flex items-center gap-1"
+        className="absolute top-6 right-32 toolbar-float rounded-2xl px-2 py-2 flex items-center gap-1"
       >
         {tools.map((t) => (
           <button
@@ -360,7 +360,7 @@ const CanvasBoard = ({ step, setStep, onErrorClick, corrected }: CanvasBoardProp
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.4 }}
-        className="absolute bottom-6 right-6 toolbar-float rounded-2xl px-2 py-2 flex items-center gap-1"
+        className="absolute top-6 right-6 toolbar-float rounded-2xl px-2 py-2 flex items-center gap-1"
       >
         <button
           onClick={undo}
