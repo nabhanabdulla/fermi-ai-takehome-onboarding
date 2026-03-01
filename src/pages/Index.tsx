@@ -1,18 +1,22 @@
 import { useState, useEffect, useRef } from "react";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import CanvasBoard from "@/components/CanvasBoard";
 import TutorPanel from "@/components/TutorPanel";
 import OnboardingOverlay from "@/components/OnboardingOverlay";
 import ErrorCard from "@/components/ErrorCard";
+import SuccessPanel from "@/components/SuccessPanel";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CheckSquare } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import Draggable from 'react-draggable';
+import confetti from "canvas-confetti";
 
 const Index = () => {
   const [step, setStep] = useState(6);
   const [corrected, setCorrected] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [doneGlow, setDoneGlow] = useState(false);
   const { toast } = useToast();
   const questionRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLDivElement>(null);
@@ -43,7 +47,23 @@ const Index = () => {
   }, [step, corrected, toast]);
 
   const handleMarkDone = () => {
-    console.log("Marked as done");
+    // 0.2s — button glow
+    setDoneGlow(true);
+
+    // 0.5s — confetti burst
+    setTimeout(() => {
+      confetti({
+        particleCount: 120,
+        spread: 80,
+        origin: { y: 0.3 },
+        colors: ["#f97316", "#22c55e", "#3b82f6", "#eab308", "#ec4899"],
+      });
+    }, 500);
+
+    // 1.2s — success panel slides up
+    setTimeout(() => {
+      setShowSuccess(true);
+    }, 1200);
   };
 
   return (
@@ -66,7 +86,13 @@ const Index = () => {
 
         {/* Mark as Done button - top right */}
         <div className="absolute right-6 top-1/2 -translate-y-1/2">
-          <Button variant="outline" onClick={handleMarkDone} className="gap-2">
+          <Button
+            variant="outline"
+            onClick={handleMarkDone}
+            className={`gap-2 transition-all duration-300 ${
+              doneGlow ? "ring-2 ring-green-500 ring-offset-2 bg-green-50 border-green-300 text-green-700" : ""
+            }`}
+          >
             <CheckSquare size={16} />
             Mark as Done
           </Button>
@@ -114,6 +140,16 @@ const Index = () => {
           )} */}
         </div>
       </div>
+
+      {/* Success panel */}
+      <AnimatePresence>
+        {showSuccess && (
+          <SuccessPanel
+            onLevelUp={() => console.log("Level up")}
+            onTryTwist={() => console.log("Try twist")}
+          />
+        )}
+      </AnimatePresence>
 
       {/* Onboarding overlays */}
       <AnimatePresence>
