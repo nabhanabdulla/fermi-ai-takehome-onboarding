@@ -10,23 +10,24 @@ import { CheckSquare } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const Index = () => {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(6);
   const [corrected, setCorrected] = useState(false);
   const { toast } = useToast();
   const questionRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLDivElement>(null);
 
   const handleErrorClick = () => {
-    setStep(4);
+    setStep(6);
   };
 
   const handleShowHint = () => {
-    setCorrected(true);
-    setStep(5);
+    // setCorrected(true);
+    setStep(8);
   };
 
   const handleIgnore = () => {
-    setStep(3);
+    setStep(7);
+    setCorrected(true);
   };
 
   // Step 5 → show toast & advance to 6
@@ -72,25 +73,26 @@ const Index = () => {
       {/* Main content area: grid */}
       <div className="flex-1 grid grid-cols-1 grid-rows-[auto_1fr] md:grid-cols-[minmax(280px,360px)_1fr] md:grid-rows-none overflow-hidden relative">
         {/* Tutor Panel */}
-        {step >= 5 && <TutorPanel step={step} setStep={setStep} />}
+        {step >= 8 && <TutorPanel step={step} setStep={setStep} />}
 
         {/* Canvas area */}
         <div className="relative overflow-hidden" ref={canvasRef}>
           <CanvasBoard
             step={step}
+            setStep={setStep}
             onErrorClick={handleErrorClick}
             corrected={corrected}
           />
 
           {/* Error Card overlay at step 4 */}
           <AnimatePresence>
-            {step === 4 && (
+            {step === 6 && (
               <ErrorCard onIgnore={handleIgnore} onShowHint={handleShowHint} />
             )}
           </AnimatePresence>
 
           {/* Start Real Practice button at step 7+ */}
-          {step >= 7 && (
+          {step >= 10 && (
             <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30">
               <Button
                 size="lg"
@@ -114,6 +116,13 @@ const Index = () => {
           />
         )}
         {step === 2 && (
+          <OnboardingOverlay
+            step={step}
+            setStep={setStep}
+            questionRef={canvasRef}
+          />
+        )}
+        {step === 5 && (
           <OnboardingOverlay
             step={step}
             setStep={setStep}

@@ -14,6 +14,7 @@ interface LineData {
 
 interface CanvasBoardProps {
   step: number;
+  setStep: (step) => void;
   onErrorClick: () => void;
   corrected: boolean;
 }
@@ -32,7 +33,7 @@ const useContainerSize = (ref: React.RefObject<HTMLDivElement>) => {
   return size;
 };
 
-const CanvasBoard = ({ step, onErrorClick, corrected }: CanvasBoardProps) => {
+const CanvasBoard = ({ step, setStep, onErrorClick, corrected }: CanvasBoardProps) => {
   const containerRef = useRef<HTMLDivElement>(null!);
   const { width, height } = useContainerSize(containerRef);
   const [lines, setLines] = useState<LineData[]>([]);
@@ -44,7 +45,7 @@ const CanvasBoard = ({ step, onErrorClick, corrected }: CanvasBoardProps) => {
 
   // Pulse animation for error dot
   useEffect(() => {
-    if (step !== 3 || !pulseRef.current) return;
+    if (step !== 4 || !pulseRef.current) return;
     const anim = new Konva.Animation((frame) => {
       if (!frame) return;
       const scale = 1 + 0.3 * Math.sin((frame.time / 400) * Math.PI);
@@ -55,6 +56,7 @@ const CanvasBoard = ({ step, onErrorClick, corrected }: CanvasBoardProps) => {
   }, [step]);
 
   const handleMouseDown = useCallback((e: Konva.KonvaEventObject<MouseEvent | TouchEvent>) => {
+    console.log("Handlemousedown called: ", isDrawing.current)
     isDrawing.current = true;
     const pos = e.target.getStage()?.getPointerPosition();
     if (!pos) return;
@@ -82,8 +84,24 @@ const CanvasBoard = ({ step, onErrorClick, corrected }: CanvasBoardProps) => {
   }, []);
 
   const handleMouseUp = useCallback(() => {
+    console.log("Handlemouseup called: ", isDrawing.current)
+
     isDrawing.current = false;
   }, []);
+
+  console.log(step)
+  // const handleMouseUp = () => {
+  //   isDrawing.current = false;
+  //   console.log("Called")
+
+  //   if (step == 3) {
+  //     setStep(4)
+  //   } else if (step == 4) {
+  //     setStep(5)
+  //   } else if (step == 5) {
+  //     setStep(6)
+  //   }
+  // };
 
   const undo = () => {
     if (lines.length === 0) return;
@@ -103,7 +121,6 @@ const CanvasBoard = ({ step, onErrorClick, corrected }: CanvasBoardProps) => {
   const lineHeight = 40;
   const mathLines = [
     "b + c = -1005 - 1007",
-    "= -2012",
     "= ",
   ];
 
@@ -113,7 +130,50 @@ const CanvasBoard = ({ step, onErrorClick, corrected }: CanvasBoardProps) => {
     corrected ? "= -a" : "= a",
   ];
 
-  const lastLineY = textY + (mathLines.length - 1) * lineHeight;
+  // 1. full lines (what you have now)
+  const fullLines = mathLines_with_a;
+
+  // 2. local state for what is currently visible
+  const [typedLines, setTypedLines] = useState<string[]>(
+    () => mathLines
+  );
+
+  // 3. start typing animation when step === 4
+  // useEffect(() => {
+  //   if (step !== 4) return;
+
+  //   let lineIndex = 0;
+  //   let charIndex = 0;
+
+  //   const interval = setInterval(() => {
+  //     setTypedLines((prev) => {
+  //       const next = [...prev];
+
+  //       // append one more character of current line
+  //       next[lineIndex] = fullLines[lineIndex].slice(0, charIndex + 1);
+
+  //       return next;
+  //     });
+
+  //     charIndex++;
+
+  //     // finished current line → move to next line
+  //     if (charIndex >= fullLines[lineIndex].length) {
+  //       lineIndex++;
+  //       charIndex = 0;
+
+  //       // finished all lines → stop
+  //       if (lineIndex >= fullLines.length) {
+  //         clearInterval(interval);
+  //       }
+  //     }
+  //   }, 40); // typing speed (ms per character)
+
+  //   return () => clearInterval(interval);
+  // }, [step, fullLines]);
+
+
+  const lastLineY = textY + (mathLines_with_a.length - 1) * lineHeight;
 
   const tools = [
     { id: "pen" as const, icon: Pen, label: "Pen" },
@@ -139,7 +199,7 @@ const CanvasBoard = ({ step, onErrorClick, corrected }: CanvasBoardProps) => {
       >
         <Layer>
           {/* Handwritten math text */}
-          {step != 1 && mathLines.map((text, i) => (
+          {(step == 2 || step == 3) && mathLines.map((text, i) => (
             <Text
               key={i}
               x={textX}
@@ -151,8 +211,53 @@ const CanvasBoard = ({ step, onErrorClick, corrected }: CanvasBoardProps) => {
             />
           ))}
 
+          {/* Not functional - 4. render typedLines instead of full mathLines_with_a */}
+          {/* {(step === 4 || step === 44 || step === 444) &&
+            mathLines_with_a.map((text, i) => {
+              if (
+                (step === 4 && i >0) ||
+                (step === 44 && i >1)
+                ) {
+                return 
+              }
+              (<Text
+                key={i}
+                x={textX}
+                y={textY + i * lineHeight}
+                text={text}
+                fontSize={24}
+                fontFamily="'Patrick Hand', cursive"
+                fill="#2d3748"
+              />)
+            }
+          )} */}
+
+          {(step >= 4 && step <= 8) && mathLines_with_a.map((text, i) => (
+            <Text
+              key={i}
+              x={textX}
+              y={textY + i * lineHeight}
+              text={text}
+              fontSize={24}
+              fontFamily="'Patrick Hand', cursive"
+              fill="#2d3748"
+            />
+          ))}
+
+          {/* {step == 7 && mathLines_with_a.map((text, i) => (
+            <Text
+              key={i}
+              x={textX}
+              y={textY + i * lineHeight}
+              text={text}
+              fontSize={24}
+              fontFamily="'Patrick Hand', cursive"
+              fill="#2d3748"
+            />
+          ))} */}
+
           {/* Dashed highlight rect around last line when step >= 2 and not corrected */}
-          {step >= 3 && !corrected && (
+          {step >= 5 && !corrected && (
             <Rect
               x={textX - 8}
               y={lastLineY - 6}
@@ -165,24 +270,8 @@ const CanvasBoard = ({ step, onErrorClick, corrected }: CanvasBoardProps) => {
             />
           )}
 
-          {/* User-drawn lines */}
-          {lines.map((line, i) => (
-            <Line
-              key={i}
-              points={line.points}
-              stroke={line.stroke}
-              strokeWidth={line.strokeWidth}
-              tension={0.5}
-              lineCap="round"
-              lineJoin="round"
-              globalCompositeOperation={
-                line.tool === "eraser" ? "destination-out" : "source-over"
-              }
-            />
-          ))}
-
           {/* Yellow error dot at step 3 */}
-          {step === 3 && (
+          {step === 5 && (
             <Circle
               ref={pulseRef}
               x={dotX}
@@ -201,7 +290,7 @@ const CanvasBoard = ({ step, onErrorClick, corrected }: CanvasBoardProps) => {
       </Stage>
 
       {/* Error badge at step 3 */}
-      {step === 3 && (
+      {/* {step === 5 && (
         <>
           <Badge className="absolute top-4 right-4 bg-amber-500 text-white border-0">
             Error noticed
@@ -210,7 +299,23 @@ const CanvasBoard = ({ step, onErrorClick, corrected }: CanvasBoardProps) => {
             Tap the yellow dot to see feedback
           </div>
         </>
-      )}
+      )} */}
+
+      {/* User-drawn lines */}
+      {/* {lines.map((line, i) => (
+        <Line
+          key={i}
+          points={line.points}
+          stroke={line.stroke}
+          strokeWidth={line.strokeWidth}
+          tension={0.5}
+          lineCap="round"
+          lineJoin="round"
+          globalCompositeOperation={
+            line.tool === "eraser" ? "destination-out" : "source-over"
+          }
+        />
+      ))} */}
 
       {/* Bottom-left toolbar */}
       <motion.div
@@ -223,11 +328,10 @@ const CanvasBoard = ({ step, onErrorClick, corrected }: CanvasBoardProps) => {
           <button
             key={t.id}
             onClick={() => setTool(t.id)}
-            className={`p-2.5 rounded-xl transition-all ${
-              tool === t.id
-                ? "bg-primary text-primary-foreground"
-                : "text-muted-foreground hover:bg-secondary"
-            }`}
+            className={`p-2.5 rounded-xl transition-all ${tool === t.id
+              ? "bg-primary text-primary-foreground"
+              : "text-muted-foreground hover:bg-secondary"
+              }`}
             title={t.label}
           >
             <t.icon size={18} />

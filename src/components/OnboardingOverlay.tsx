@@ -54,36 +54,58 @@ const OnboardingOverlay = ({ step, setStep, questionRef }: OnboardingOverlayProp
     );
   }
 
-  if (step === 1) { 
-  // Get question card position for spotlight
-  const rect = questionRef.current?.getBoundingClientRect();
-  const cx = rect ? rect.left : window.innerWidth / 2;
-  const cy = rect ? rect.top + rect.height / 2 : 100;
+  if (step === 1) {
+    // Get question card position for spotlight
+    const rect = questionRef.current?.getBoundingClientRect();
+    const cx = rect ? rect.left : window.innerWidth / 2;
+    const cy = rect ? rect.top + rect.height / 2 : 100;
 
-  return (
-    <SpotlightOverlay
-      x={cx}
-      y={cy}
-      text="Start by carefully reading the question."
-      onConfirm={() => setStep(2)}
-      confirmLabel="Got it"
-    />
-  );
-} else if (step === 2) {
-  const rect = questionRef.current?.getBoundingClientRect();
-  const cx = rect ? rect.left + rect.width / 2 : window.innerWidth / 2;
-  const cy = rect ? rect.top + 100 : 100;
+    return (
+      <SpotlightOverlay
+        x={cx}
+        y={cy}
+        text="Start by carefully reading the question."
+        onConfirm={() => setStep(2)}
+        confirmLabel="Got it"
+      />
+    );
+  } else if (step === 2) {
+    const rect = questionRef.current?.getBoundingClientRect();
+    const cx = rect ? rect.left + rect.width / 2 : window.innerWidth / 2;
+    const cy = rect ? rect.top + 100 : 100;
 
-  return (
-    <SpotlightOverlay
-      x={cx}
-      y={cy}
-      text="I've started solving, go ahead and complete the solution."
-      onConfirm={() => setStep(2)}
-      confirmLabel="Got it"
-    />
-  );
-};
+    return (
+      <SpotlightOverlay
+        x={cx}
+        y={cy}
+        text="I've started solving, go ahead and complete the solution."
+        onConfirm={() => {
+          setStep(3)
+          setTimeout(() => setStep(4), 2000);
+          // setTimeout(() => setStep(44), 2000);
+          // setTimeout(() => setStep(444), 4000);
+          setTimeout(() => setStep(5), 4000);
+          setTimeout(() => setStep(6), 6000);
+          // setTimeout(() => setStep(7), 8000);
+        }}
+        confirmLabel="Got it"
+      />
+    );
+  } else if (step === 5) {
+    const rect = questionRef.current?.getBoundingClientRect();
+    const cx = rect ? rect.left + rect.width : window.innerWidth / 2;
+    const cy = rect ? rect.top + 100 : 100;
+
+    return (
+      <SpotlightOverlay
+        x={cx}
+        y={cy}
+        text="Oh oh, there's an error. Tap the yellow dot to see feedback."
+        confirmLabel="Got it"
+      />
+    )
+  }
+
 }
 
 export default OnboardingOverlay;
