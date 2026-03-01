@@ -69,10 +69,25 @@ const Index = () => {
   return (
     <div className="h-screen w-screen flex flex-col overflow-hidden bg-background">
       {/* Question card - top center */}
-      <div className="flex justify-center pt-4 px-4 relative z-20" ref={questionRef}>
-        <Card className="max-w-2xl w-full">
+      <div className="pt-4 px-4 relative z-20" ref={questionRef}>
+        {/* Top row: Mark as Done on the right */}
+        <div className="flex justify-end max-w-3xl mx-auto mb-3">
+          <Button
+            variant="outline"
+            onClick={handleMarkDone}
+            className={`gap-2 transition-all duration-300 ${doneGlow
+                ? "ring-2 ring-green-500 ring-offset-2 bg-green-50 border-green-300 text-green-700"
+                : ""
+              }`}
+          >
+            <CheckSquare size={16} />
+            Mark as Done
+          </Button>
+        </div>
+
+        {/* Question card: left-aligned text, below the button */}
+        <Card className="max-w-3xl mx-auto w-full">
           <CardContent className="py-4 px-6">
-            <p className="text-sm text-muted-foreground mb-1">Question</p>
             <p className="text-base leading-relaxed text-foreground">
               If <span className="font-mono font-medium">a = 2012</span>,{" "}
               <span className="font-mono font-medium">b = −1005</span>,{" "}
@@ -83,20 +98,6 @@ const Index = () => {
             </p>
           </CardContent>
         </Card>
-
-        {/* Mark as Done button - top right */}
-        <div className="absolute right-6 top-1/2 -translate-y-1/2">
-          <Button
-            variant="outline"
-            onClick={handleMarkDone}
-            className={`gap-2 transition-all duration-300 ${
-              doneGlow ? "ring-2 ring-green-500 ring-offset-2 bg-green-50 border-green-300 text-green-700" : ""
-            }`}
-          >
-            <CheckSquare size={16} />
-            Mark as Done
-          </Button>
-        </div>
       </div>
 
       {/* Main content area: grid */}

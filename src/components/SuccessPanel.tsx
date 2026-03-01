@@ -55,7 +55,7 @@ const SuccessPanel = ({ onLevelUp, onTryTwist }: SuccessPanelProps) => {
             className="space-y-2"
           >
             <p className="text-2xl font-semibold text-foreground">
-              ✔ You cracked a zero-sum identity
+              You cracked a zero-sum identity
             </p>
           </motion.div>
 

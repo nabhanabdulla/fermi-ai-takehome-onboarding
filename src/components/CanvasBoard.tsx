@@ -201,7 +201,7 @@ const CanvasBoard = ({ step, setStep, onErrorClick, corrected }: CanvasBoardProp
   const dotY = lastLineY + 10;
 
   return (
-    <div ref={containerRef} className="relative w-full h-full canvas-dots">
+    <div ref={containerRef} className="relative w-full h-screen canvas-dots">
       <Stage
         width={width}
         height={height}
