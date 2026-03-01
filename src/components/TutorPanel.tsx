@@ -97,7 +97,7 @@ const TutorPanel = ({ step, setStep }: TutorPanelProps) => {
   };
 
   return (
-    <Card className="h-full max-h-[40vh] rounded-none border-t-0 border-b-0 border-l-0 flex flex-col bg-card">
+    <Card className="h-full rounded-none border-t-0 border-b-0 border-l-0 flex flex-col bg-card">
       {/* Header bar */}
       <CardHeader className="px-4 py-3 border-b border-border flex-row items-center gap-2 space-y-0">
         <button className="text-muted-foreground hover:text-foreground transition-colors">

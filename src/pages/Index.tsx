@@ -8,6 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CheckSquare } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import Draggable from 'react-draggable';
 
 const Index = () => {
   const [step, setStep] = useState(6);
@@ -15,6 +16,7 @@ const Index = () => {
   const { toast } = useToast();
   const questionRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLDivElement>(null);
+  const tutorPanelRef = useRef(null);
 
   const handleErrorClick = () => {
     setStep(6);
@@ -71,9 +73,15 @@ const Index = () => {
       </div>
 
       {/* Main content area: grid */}
-      <div className="flex-1 grid grid-cols-1 grid-rows-[auto_1fr] md:grid-cols-[minmax(280px,360px)_1fr] md:grid-rows-none overflow-hidden relative">
+      <div className="flex-1  overflow-hidden relative">
         {/* Tutor Panel */}
-        {step >= 8 && <TutorPanel step={step} setStep={setStep} />}
+        {step >= 8 && (
+          <Draggable nodeRef={tutorPanelRef}>
+            <div ref={tutorPanelRef} className="fixed left-5 z-[50]">
+              <TutorPanel step={step} setStep={setStep} />
+            </div>
+          </Draggable>
+        )}
 
         {/* Canvas area */}
         <div className="relative overflow-hidden" ref={canvasRef}>
