@@ -15,6 +15,7 @@ import {
   MicOff,
   ThumbsUp,
   ThumbsDown,
+  MessageCircle,
   ArrowRight,
 } from "lucide-react";
 
@@ -33,6 +34,7 @@ const TutorPanel = ({ step, setStep }: TutorPanelProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   useEffect(() => {
     if (step === 10) {
@@ -111,17 +113,36 @@ const TutorPanel = ({ step, setStep }: TutorPanelProps) => {
           <Volume2 size={18} />
         </button>
         <div className="flex items-center gap-1.5 bg-secondary rounded-full px-3 py-1.5 flex-1 min-w-0">
-          <X size={14} className="text-muted-foreground shrink-0" />
-          <span className="text-sm font-medium text-foreground truncate">
-            Chatting with Fermi tutor
-          </span>
+          {isCollapsed ? (
+            <button
+              onClick={() => setIsCollapsed(false)}
+              className="flex items-center gap-1.5 text-sm font-medium text-foreground truncate"
+            >
+              <MessageCircle size={14} className="text-muted-foreground shrink-0" />
+              <span className="truncate">Chat with Fermi tutor</span>
+            </button>
+          ) : (
+            <>
+              <button
+                onClick={() => setIsCollapsed(true)}
+                className="text-muted-foreground hover:text-foreground transition-colors"
+                aria-label="Close tutor chat"
+              >
+                <X size={14} className="shrink-0" />
+              </button>
+              <span className="text-sm font-medium text-foreground truncate">
+                Chatting with Fermi tutor
+              </span>
+            </>
+          )}
         </div>
         <button className="text-muted-foreground hover:text-foreground transition-colors">
           <MicOff size={18} />
         </button>
       </CardHeader>
 
-      <CardContent className="flex-1 flex flex-col p-0 overflow-hidden min-h-[200px]">
+      {!isCollapsed && (
+        <CardContent className="flex-1 flex flex-col p-0 overflow-hidden min-h-[200px]">
         {/* Messages */}
         <ScrollArea className="flex-1 px-4 py-3" ref={scrollRef}>
           <div className="space-y-4">
@@ -224,6 +245,7 @@ const TutorPanel = ({ step, setStep }: TutorPanelProps) => {
           </div>
         </div>
       </CardContent>
+      )}
     </Card>
   );
 };
