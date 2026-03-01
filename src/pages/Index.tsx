@@ -71,7 +71,7 @@ const Index = () => {
       {/* Question card - top center */}
       <div className="pt-4 px-4 relative z-20" ref={questionRef}>
         {/* Top row: Mark as Done on the right */}
-        <div className="flex justify-end max-w-3xl mx-auto mb-3">
+        <div className="flex justify-end mx-auto mb-3">
           <Button
             variant="outline"
             onClick={handleMarkDone}
@@ -86,7 +86,7 @@ const Index = () => {
         </div>
 
         {/* Question card: left-aligned text, below the button */}
-        <Card className="max-w-3xl mx-auto w-full">
+        <Card className="mx-auto w-full">
           <CardContent className="py-4 px-6">
             <p className="text-base leading-relaxed text-foreground">
               If <span className="font-mono font-medium">a = 2012</span>,{" "}
@@ -105,7 +105,7 @@ const Index = () => {
         {/* Tutor Panel */}
         {step >= 7 && (
           <Draggable nodeRef={tutorPanelRef}>
-            <div ref={tutorPanelRef} className="fixed top-[200px] right-0 z-[50] w-[400px]">
+            <div ref={tutorPanelRef} className="fixed top-[250px] right-0 z-[50] w-[400px]">
               <TutorPanel step={step} setStep={setStep} />
             </div>
           </Draggable>

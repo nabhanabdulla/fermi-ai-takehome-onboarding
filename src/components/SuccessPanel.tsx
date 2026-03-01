@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Rocket, RefreshCw } from "lucide-react";
+import { Rocket, RefreshCw, SquareArrowRight } from "lucide-react";
 
 interface SuccessPanelProps {
   onLevelUp: () => void;
@@ -16,7 +16,7 @@ const SuccessPanel = ({ onLevelUp, onTryTwist }: SuccessPanelProps) => {
       exit={{ y: "100%" }}
       transition={{ type: "spring", damping: 28, stiffness: 260, delay: 1.0 }}
       className="fixed bottom-0 left-0 right-0 z-[60] flex justify-center pointer-events-none"
-      style={{ height: "40%" }}
+      // style={{ height: "50%" }}
     >
       <Card className="w-full max-w-2xl mx-4 mb-0 rounded-b-none rounded-t-2xl shadow-2xl border-t border-x border-border bg-card pointer-events-auto flex flex-col">
         <CardContent className="flex-1 flex flex-col items-center justify-center gap-6 px-8 py-10 text-center">
@@ -77,7 +77,7 @@ const SuccessPanel = ({ onLevelUp, onTryTwist }: SuccessPanelProps) => {
             initial={{ y: 15, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 2.0, duration: 0.4 }}
-            className="flex gap-3 pt-2"
+            className="flex flex-wrap justify-center gap-3 pt-2"
           >
             <Button size="lg" className="gap-2 text-base px-6" onClick={onLevelUp}>
               <Rocket size={18} />
@@ -89,8 +89,8 @@ const SuccessPanel = ({ onLevelUp, onTryTwist }: SuccessPanelProps) => {
               className="gap-2 text-base px-6"
               onClick={onTryTwist}
             >
-              <RefreshCw size={18} />
-              Try a Twist on This Problem
+              <SquareArrowRight size={18} />
+              Try Next Problem
             </Button>
           </motion.div>
         </CardContent>
