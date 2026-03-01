@@ -13,7 +13,7 @@ import Draggable from 'react-draggable';
 import confetti from "canvas-confetti";
 
 const Index = () => {
-  const [step, setStep] = useState(6);
+  const [step, setStep] = useState(1);
   const [corrected, setCorrected] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [doneGlow, setDoneGlow] = useState(false);
@@ -28,7 +28,10 @@ const Index = () => {
 
   const handleShowHint = () => {
     // setCorrected(true);
-    setStep(8);
+    // setStep(8);
+    setStep(7);
+    setCorrected(true);
+    setTimeout(() => setStep(9), 4000)
   };
 
   const handleIgnore = () => {
@@ -38,13 +41,19 @@ const Index = () => {
   };
 
   // Step 5 → show toast & advance to 6
+  // useEffect(() => {
+  //   if (step === 9 && corrected) {
+  //     toast({ title: "Corrected ✔", duration: 2000 });
+  //     const timer = setTimeout(() => setStep(6), 800);
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [step, corrected, toast]);
+
   useEffect(() => {
-    if (step === 5 && corrected) {
-      toast({ title: "Corrected ✔", duration: 2000 });
-      const timer = setTimeout(() => setStep(6), 800);
-      return () => clearTimeout(timer);
+    if (step == 12) {
+      handleMarkDone()
     }
-  }, [step, corrected, toast]);
+  }, [step])
 
   const handleMarkDone = () => {
     // 0.2s — button glow
@@ -76,8 +85,8 @@ const Index = () => {
             variant="outline"
             onClick={handleMarkDone}
             className={`gap-2 transition-all duration-300 ${doneGlow
-                ? "ring-2 ring-green-500 ring-offset-2 bg-green-50 border-green-300 text-green-700"
-                : ""
+              ? "ring-2 ring-green-500 ring-offset-2 bg-green-50 border-green-300 text-green-700"
+              : ""
               }`}
           >
             <CheckSquare size={16} />
@@ -173,6 +182,13 @@ const Index = () => {
             step={step}
             setStep={setStep}
             questionRef={canvasRef}
+          />
+        )}
+        {step === 9 && (
+          <OnboardingOverlay
+            step={step}
+            setStep={setStep}
+            questionRef={tutorPanelRef}
           />
         )}
       </AnimatePresence>

@@ -146,6 +146,27 @@ const CanvasBoard = ({ step, setStep, onErrorClick, corrected }: CanvasBoardProp
     " "
   ];
 
+  const mathLines_checkpoint3 = [
+    "b + c = -1005 - 1007",
+    "= -2012",
+    "= -a",
+    " ",
+    "c + a = -1007 + 2012",
+    "= 1005",
+    "= -b",
+    " ",
+    "a + b = 2012 - 1005",
+    "= 1007",
+    "= -c",
+    " ",
+    "a⁴/(b+c) + b⁴/(c+a) + c⁴/(a+b) + 3abc",
+    "= a⁴/(-a) + b⁴/(-b) + c⁴/(-c) + 3abc",
+    "= -a\u00B3 - b\u00B3 - c\u00B3 + 3abc",
+    "= 3(a + b + c)(ab + bc + ca)",
+    "= 3 x 0 x (ab + bc + ca)",
+    "= 0"
+  ];
+
   // 1. full lines (what you have now)
   // const fullLines = mathLines_with_a;
 
@@ -260,7 +281,19 @@ const CanvasBoard = ({ step, setStep, onErrorClick, corrected }: CanvasBoardProp
             />
           ))}
 
-          {step >= 9 && mathLines_checkpoint1.map((text, i) => (
+          {(step == 9 || step == 10) && mathLines_checkpoint1.map((text, i) => (
+            <Text
+              key={i}
+              x={textX}
+              y={textY + i * lineHeight}
+              text={text}
+              fontSize={24}
+              fontFamily="'Patrick Hand', cursive"
+              fill="#2d3748"
+            />
+          ))}
+
+          {step >= 11 && mathLines_checkpoint3.map((text, i) => (
             <Text
               key={i}
               x={textX}
