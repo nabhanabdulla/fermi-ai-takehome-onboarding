@@ -135,12 +135,15 @@ const CanvasBoard = ({ step, setStep, onErrorClick, corrected }: CanvasBoardProp
     "b + c = -1005 - 1007",
     "= -2012",
     "= -a",
+    " ",
     "c + a = -1007 + 2012",
     "= 1005",
     "= -b",
+    " ",
     "a + b = 2012 - 1005",
     "= 1007",
-    "= -c"
+    "= -c",
+    " "
   ];
 
   // 1. full lines (what you have now)
@@ -257,7 +260,7 @@ const CanvasBoard = ({ step, setStep, onErrorClick, corrected }: CanvasBoardProp
             />
           ))}
 
-          {step == 9 && mathLines_checkpoint1.map((text, i) => (
+          {step >= 9 && mathLines_checkpoint1.map((text, i) => (
             <Text
               key={i}
               x={textX}

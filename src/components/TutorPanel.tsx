@@ -30,23 +30,17 @@ interface TutorPanelProps {
 }
 
 const TutorPanel = ({ step, setStep }: TutorPanelProps) => {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: 1,
-      text: "Hello! I'm your Fermi tutor. Let's work through this problem together.",
-      from: "tutor",
-    },
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (step === 7) {
+    if (step === 10) {
       setMessages((prev) => [
         ...prev,
         {
           id: Date.now(),
-          text: "Great correction! Since b + c = −a, try substituting −a into the denominator of the first fraction.",
+          text: "Try substituting these values into the denominator of the fractions.",
           from: "tutor",
         },
       ]);
@@ -64,8 +58,8 @@ const TutorPanel = ({ step, setStep }: TutorPanelProps) => {
       ...prev,
       { id: Date.now(), text: "Can you please check my work", from: "user" },
     ]);
-    if (step === 6) {
-      setTimeout(() => setStep(7), 400);
+    if (step === 9) {
+      setTimeout(() => setStep(10), 1000);
     }
   };
 
@@ -127,7 +121,7 @@ const TutorPanel = ({ step, setStep }: TutorPanelProps) => {
         </button>
       </CardHeader>
 
-      <CardContent className="flex-1 flex flex-col p-0 overflow-hidden">
+      <CardContent className="flex-1 flex flex-col p-0 overflow-hidden min-h-[200px]">
         {/* Messages */}
         <ScrollArea className="flex-1 px-4 py-3" ref={scrollRef}>
           <div className="space-y-4">

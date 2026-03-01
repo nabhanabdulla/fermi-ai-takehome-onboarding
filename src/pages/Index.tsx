@@ -30,7 +30,7 @@ const Index = () => {
   const handleIgnore = () => {
     setStep(7);
     setCorrected(true);
-    setTimeout(() => setStep(9), 2000)
+    setTimeout(() => setStep(9), 4000)
   };
 
   // Step 5 → show toast & advance to 6
@@ -76,7 +76,7 @@ const Index = () => {
       {/* Main content area: grid */}
       <div className="flex-1  overflow-hidden relative">
         {/* Tutor Panel */}
-        {step >= 8 && (
+        {step >= 7 && (
           <Draggable nodeRef={tutorPanelRef}>
             <div ref={tutorPanelRef} className="fixed top-[200px] right-0 z-[50] w-[400px]">
               <TutorPanel step={step} setStep={setStep} />
@@ -101,7 +101,7 @@ const Index = () => {
           </AnimatePresence>
 
           {/* Start Real Practice button at step 7+ */}
-          {step >= 10 && (
+          {/* {step >= 10 && (
             <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30">
               <Button
                 size="lg"
@@ -111,7 +111,7 @@ const Index = () => {
                 Start Real Practice
               </Button>
             </div>
-          )}
+          )} */}
         </div>
       </div>
 
