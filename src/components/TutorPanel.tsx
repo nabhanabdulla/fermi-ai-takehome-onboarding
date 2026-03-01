@@ -59,7 +59,7 @@ const TutorPanel = ({ step, setStep }: TutorPanelProps) => {
   };
 
   return (
-    <Card className="h-full rounded-none border-t-0 border-b-0 border-l-0 flex flex-col">
+    <Card className="h-full max-h-[40vh] md:max-h-none rounded-none border-t-0 border-b-0 border-l-0 flex flex-col">
       <CardHeader className="pb-3 border-b border-border">
         <div className="flex items-center gap-3">
           <div className="relative">

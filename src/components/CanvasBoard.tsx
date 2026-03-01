@@ -104,6 +104,12 @@ const CanvasBoard = ({ step, onErrorClick, corrected }: CanvasBoardProps) => {
   const mathLines = [
     "b + c = -1005 - 1007",
     "= -2012",
+    "= ",
+  ];
+
+  const mathLines_with_a = [
+    "b + c = -1005 - 1007",
+    "= -2012",
     corrected ? "= -a" : "= a",
   ];
 
@@ -133,7 +139,7 @@ const CanvasBoard = ({ step, onErrorClick, corrected }: CanvasBoardProps) => {
       >
         <Layer>
           {/* Handwritten math text */}
-          {mathLines.map((text, i) => (
+          {step != 1 && mathLines.map((text, i) => (
             <Text
               key={i}
               x={textX}
@@ -146,7 +152,7 @@ const CanvasBoard = ({ step, onErrorClick, corrected }: CanvasBoardProps) => {
           ))}
 
           {/* Dashed highlight rect around last line when step >= 2 and not corrected */}
-          {step >= 2 && !corrected && (
+          {step >= 3 && !corrected && (
             <Rect
               x={textX - 8}
               y={lastLineY - 6}

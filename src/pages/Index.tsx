@@ -14,6 +14,7 @@ const Index = () => {
   const [corrected, setCorrected] = useState(false);
   const { toast } = useToast();
   const questionRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLDivElement>(null);
 
   const handleErrorClick = () => {
     setStep(4);
@@ -69,12 +70,12 @@ const Index = () => {
       </div>
 
       {/* Main content area: grid */}
-      <div className="flex-1 grid grid-cols-[360px_1fr] overflow-hidden relative">
+      <div className="flex-1 grid grid-cols-1 grid-rows-[auto_1fr] md:grid-cols-[minmax(280px,360px)_1fr] md:grid-rows-none overflow-hidden relative">
         {/* Tutor Panel */}
-        <TutorPanel step={step} setStep={setStep} />
+        {step >= 5 && <TutorPanel step={step} setStep={setStep} />}
 
         {/* Canvas area */}
-        <div className="relative overflow-hidden">
+        <div className="relative overflow-hidden" ref={canvasRef}>
           <CanvasBoard
             step={step}
             onErrorClick={handleErrorClick}
@@ -110,6 +111,13 @@ const Index = () => {
             step={step}
             setStep={setStep}
             questionRef={questionRef}
+          />
+        )}
+        {step === 2 && (
+          <OnboardingOverlay
+            step={step}
+            setStep={setStep}
+            questionRef={canvasRef}
           />
         )}
       </AnimatePresence>
