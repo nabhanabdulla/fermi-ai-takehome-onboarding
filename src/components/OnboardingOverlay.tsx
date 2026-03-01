@@ -41,7 +41,8 @@ const OnboardingOverlay = ({ step, setStep, questionRef }: OnboardingOverlayProp
           initial={{ y: 10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.3 }}
-          className="mt-32 bg-card border border-border rounded-xl px-6 py-4 shadow-lg max-w-sm text-center"
+          className="bg-card border border-border rounded-xl px-6 py-4 shadow-lg max-w-sm text-center"
+          style={{ marginTop: `calc(${y}px + 120px)` }}
         >
           <p className="text-foreground text-sm mb-4">{text}</p>
           {onConfirm && (
@@ -57,7 +58,8 @@ const OnboardingOverlay = ({ step, setStep, questionRef }: OnboardingOverlayProp
   if (step === 1) {
     // Get question card position for spotlight
     const rect = questionRef.current?.getBoundingClientRect();
-    const cx = rect ? rect.left : window.innerWidth / 2;
+    // const cx = rect ? rect.left : window.innerWidth / 2;
+    const cx = 300;
     const cy = rect ? rect.top + rect.height / 2 : 100;
 
     return (
@@ -71,7 +73,8 @@ const OnboardingOverlay = ({ step, setStep, questionRef }: OnboardingOverlayProp
     );
   } else if (step === 2) {
     const rect = questionRef.current?.getBoundingClientRect();
-    const cx = rect ? rect.left + rect.width / 2 : window.innerWidth / 2;
+    const cx = 300;
+    // const cx = rect ? rect.left + rect.width / 2 : window.innerWidth / 2;
     const cy = rect ? rect.top + 100 : 100;
 
     return (

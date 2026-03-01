@@ -120,11 +120,13 @@ const CanvasBoard = ({ step, setStep, onErrorClick, corrected }: CanvasBoardProp
   const textY = 60;
   const lineHeight = 40;
   const mathLines = [
+    "",
     "b + c = -1005 - 1007",
     "= ",
   ];
 
   const mathLines_with_a = [
+    "",
     "b + c = -1005 - 1007",
     "= -2012",
     corrected ? "= -a" : "= a",
@@ -132,6 +134,7 @@ const CanvasBoard = ({ step, setStep, onErrorClick, corrected }: CanvasBoardProp
 
 
   const mathLines_checkpoint1 = [
+    "",
     "b + c = -1005 - 1007",
     "= -2012",
     "= -a",
@@ -147,6 +150,7 @@ const CanvasBoard = ({ step, setStep, onErrorClick, corrected }: CanvasBoardProp
   ];
 
   const mathLines_checkpoint3 = [
+    "",
     "b + c = -1005 - 1007",
     "= -2012",
     "= -a",
