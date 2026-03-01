@@ -130,13 +130,26 @@ const CanvasBoard = ({ step, setStep, onErrorClick, corrected }: CanvasBoardProp
     corrected ? "= -a" : "= a",
   ];
 
+
+  const mathLines_checkpoint1 = [
+    "b + c = -1005 - 1007",
+    "= -2012",
+    "= -a",
+    "c + a = -1007 + 2012",
+    "= 1005",
+    "= -b",
+    "a + b = 2012 - 1005",
+    "= 1007",
+    "= -c"
+  ];
+
   // 1. full lines (what you have now)
-  const fullLines = mathLines_with_a;
+  // const fullLines = mathLines_with_a;
 
   // 2. local state for what is currently visible
-  const [typedLines, setTypedLines] = useState<string[]>(
-    () => mathLines
-  );
+  // const [typedLines, setTypedLines] = useState<string[]>(
+  //   () => mathLines
+  // );
 
   // 3. start typing animation when step === 4
   // useEffect(() => {
@@ -244,7 +257,7 @@ const CanvasBoard = ({ step, setStep, onErrorClick, corrected }: CanvasBoardProp
             />
           ))}
 
-          {/* {step == 7 && mathLines_with_a.map((text, i) => (
+          {step == 9 && mathLines_checkpoint1.map((text, i) => (
             <Text
               key={i}
               x={textX}
@@ -254,7 +267,7 @@ const CanvasBoard = ({ step, setStep, onErrorClick, corrected }: CanvasBoardProp
               fontFamily="'Patrick Hand', cursive"
               fill="#2d3748"
             />
-          ))} */}
+          ))}
 
           {/* Dashed highlight rect around last line when step >= 2 and not corrected */}
           {step >= 5 && !corrected && (

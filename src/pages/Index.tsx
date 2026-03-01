@@ -30,6 +30,7 @@ const Index = () => {
   const handleIgnore = () => {
     setStep(7);
     setCorrected(true);
+    setTimeout(() => setStep(9), 2000)
   };
 
   // Step 5 → show toast & advance to 6
@@ -77,7 +78,7 @@ const Index = () => {
         {/* Tutor Panel */}
         {step >= 8 && (
           <Draggable nodeRef={tutorPanelRef}>
-            <div ref={tutorPanelRef} className="fixed left-5 z-[50]">
+            <div ref={tutorPanelRef} className="fixed top-[200px] right-0 z-[50] w-[400px]">
               <TutorPanel step={step} setStep={setStep} />
             </div>
           </Draggable>
