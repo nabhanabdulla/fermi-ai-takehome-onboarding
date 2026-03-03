@@ -1,73 +1,77 @@
-# Welcome to your Lovable project
+# 🧮 Fermi — Interactive Math Tutor Onboarding
 
-## Project info
+> A polished, step-by-step onboarding prototype for an AI math tutoring app — built to showcase interaction design, canvas rendering, and micro-animation craft.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+**[▶ Live Demo](https://onboarding-task.lovable.app)**
 
-## How can I edit this code?
+---
 
-There are several ways of editing your application.
+## What is this?
 
-**Use Lovable**
+An interactive onboarding experience that walks students through solving a competition-style math problem on a digital canvas. It combines spotlight overlays, handwriting-style canvas rendering, error detection, an AI tutor chat panel, and a celebration sequence — all orchestrated through a 12-step state machine.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+---
 
-Changes made via Lovable will be committed automatically to this repo.
+## Onboarding Flow
 
-**Use your preferred IDE**
+| Step | What Happens | Key Interaction |
+|------|-------------|-----------------|
+| **1** | Spotlight overlay on question card | "Read the question" — user taps to continue |
+| **2** | Spotlight shifts to canvas | "Start from the given starter solution" |
+| **3–4** | Math text auto-writes on canvas | `b + c = −1005 − 1007 = −2012 = a` appears stroke-by-stroke |
+| **5** | Overlay prompts error detection | "There's an error — tap the yellow dot" |
+| **6** | Error card slides in | User chooses **IGNORE** or **SHOW HINT** |
+| **7** | Correction applied on canvas | `= a` morphs to `= −a`, auto-advances |
+| **8** | Tutor panel appears | Draggable chat panel with AI tutor avatar |
+| **9** | Full substitution on canvas | `c + a = −b`, `a + b = −c` written out; tutor ready |
+| **10** | User interacts with tutor | "Check my work" or "Guide me" triggers tutor response |
+| **11** | Final solution on canvas | `= 0` — the answer reveals itself |
+| **12** | Mark as Done celebration | Button glow → confetti burst → success panel slides up |
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Micro-Interaction Timeline (Step 12)
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+```
+0.0s  Tap "Mark Done"
+0.2s  Button ink glow (ring + bg transition)
+0.5s  Confetti burst (120 particles, 5 colors)
+1.2s  Success panel slides up with animated checkmark
+```
 
-Follow these steps:
+---
+
+## Tech Stack
+
+| Technology | Role |
+|-----------|------|
+| **React 18** | Component architecture & state management |
+| **TypeScript** | Type safety across the entire codebase |
+| **TailwindCSS** | Utility-first styling with semantic design tokens |
+| **Framer Motion** | Orchestrated animations, `AnimatePresence` transitions |
+| **react-konva** | HTML5 Canvas rendering for math handwriting |
+| **shadcn/ui** | Accessible UI primitives (cards, buttons, dialogs) |
+| **canvas-confetti** | Celebration particle effects |
+| **react-draggable** | Draggable tutor panel positioning |
+
+---
+
+## Architecture Highlights
+
+- **State Machine Pattern** — A single `step` integer (1–12) drives the entire onboarding flow. Components conditionally render based on step, making the flow easy to extend or reorder.
+- **Micro-Interaction Timelines** — `setTimeout` chains create deliberate emotional pacing (glow → confetti → slide-up) rather than instant transitions.
+- **Component Isolation** — `CanvasBoard`, `TutorPanel`, `ErrorCard`, `SuccessPanel`, and `OnboardingOverlay` are fully decoupled; each owns its own animation logic.
+- **Spotlight Overlay System** — SVG-based spotlight with computed positions from `ref.getBoundingClientRect()`, creating focused attention on specific UI regions.
+
+---
+
+## Getting Started
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
 git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
 cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+npm install
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+---
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Built with [Lovable](https://lovable.dev)
