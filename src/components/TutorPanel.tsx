@@ -68,8 +68,17 @@ const TutorPanel = ({ step, setStep }: TutorPanelProps) => {
       setTimeout(() => setStep(12), 8000);
     }
   };
-
+  
   const handleGuideMe = () => {
+    setMessages((prev) => [
+      ...prev,
+      { id: Date.now(), text: "Can you please guide me?", from: "user" },
+    ]);
+    if (step === 9) {
+      setTimeout(() => setStep(10), 1000);
+      setTimeout(() => setStep(11), 4000);
+      setTimeout(() => setStep(12), 8000);
+    }
     // setMessages((prev) => [
     //   ...prev,
     //   {
@@ -78,13 +87,6 @@ const TutorPanel = ({ step, setStep }: TutorPanelProps) => {
     //     from: "tutor",
     //   },
     // ]);
-    setMessages((prev) => [
-      ...prev,
-      { id: Date.now(), text: "Can you please guide me?", from: "user" },
-    ]);
-    if (step === 9) {
-      setTimeout(() => setStep(10), 1000);
-    }
   };
 
   const handleSend = () => {
@@ -108,7 +110,7 @@ const TutorPanel = ({ step, setStep }: TutorPanelProps) => {
       <Card className="h-full rounded-none border-t-0 border-b-0 border-l-0 flex flex-col bg-card">
         {/* Header bar */}
         <CardHeader className="px-4 py-3 border-b border-border flex-row items-center gap-2 space-y-0">
-          <button className="text-muted-foreground hover:text-foreground transition-colors">
+          <button className="drag-handle cursor-move text-muted-foreground hover:text-foreground transition-colors">
             <GripVertical size={18} />
           </button>
           <Avatar className="h-9 w-9 relative">
@@ -211,14 +213,15 @@ const TutorPanel = ({ step, setStep }: TutorPanelProps) => {
             </ScrollArea>
 
             {/* Action buttons */}
-            <div className="px-4 pb-2 flex gap-2" ref={checkMyWorkRef}>
+            <div className="px-4 pb-2 flex gap-2">
               <Button
                 variant="outline"
                 size="sm"
-                className={`flex-1 gap-1.5 rounded-full text-xs ${step === 6
-                    ? "animate-pulse ring-2 ring-primary ring-offset-2"
-                    : ""
-                  }`}
+                className="flex-1 gap-1.5 rounded-full text-xs"
+                // className={`flex-1 gap-1.5 rounded-full text-xs ${step === 6
+                //     ? "animate-pulse ring-2 ring-primary ring-offset-2"
+                //     : ""
+                //   }`}
                 onClick={handleCheckWork}
               >
                 <Search size={14} />

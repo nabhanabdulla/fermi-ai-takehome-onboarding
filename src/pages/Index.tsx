@@ -113,7 +113,7 @@ const Index = () => {
       <div className="flex-1  overflow-hidden relative">
         {/* Tutor Panel */}
         {step >= 7 && (
-          <Draggable nodeRef={tutorPanelRef}>
+          <Draggable nodeRef={tutorPanelRef} handle=".drag-handle">
             <div ref={tutorPanelRef} className="fixed top-[250px] right-0 z-[50] w-[400px]">
               <TutorPanel step={step} setStep={setStep} />
             </div>
@@ -184,13 +184,13 @@ const Index = () => {
             questionRef={canvasRef}
           />
         )}
-        {step === 9 && (
+        {/*{step === 9 && (
           <OnboardingOverlay
             step={step}
             setStep={setStep}
             questionRef={tutorPanelRef}
           />
-        )}
+        )}*/}
       </AnimatePresence>
     </div>
   );
