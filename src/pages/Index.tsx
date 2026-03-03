@@ -112,7 +112,7 @@ const Index = () => {
       {/* Main content area: grid */}
       <div className="flex-1  overflow-hidden relative">
         {/* Tutor Panel */}
-        {step >= 7 && (
+        {step >= 8 && (
           <Draggable nodeRef={tutorPanelRef} handle=".drag-handle">
             <div ref={tutorPanelRef} className="fixed top-[250px] right-0 z-[50] w-[400px]">
               <TutorPanel step={step} setStep={setStep} />

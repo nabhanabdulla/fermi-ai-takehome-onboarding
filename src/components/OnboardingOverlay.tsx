@@ -107,20 +107,21 @@ const OnboardingOverlay = ({ step, setStep, questionRef }: OnboardingOverlayProp
         confirmLabel="Ok"
       />
     )
-  } else if (step === 9) {
-    const rect = questionRef.current?.getBoundingClientRect();
-    const cx = rect ? rect.left + rect.width/2 : window.innerWidth / 2;
-    const cy = rect ? rect.top + rect.height/2 : 100;
+  } 
+  // else if (step === 9) {
+  //   const rect = questionRef.current?.getBoundingClientRect();
+  //   const cx = rect ? rect.left + rect.width/2 : window.innerWidth / 2;
+  //   const cy = rect ? rect.top + rect.height/2 : 100;
 
-    return (
-      <SpotlightOverlay
-        x={cx}
-        y={cy}
-        text="Try checking your work"
-        confirmLabel="Ok"
-      />
-    )
-  }
+  //   return (
+  //     <SpotlightOverlay
+  //       x={cx}
+  //       y={cy}
+  //       text="Try checking your work"
+  //       confirmLabel="Ok"
+  //     />
+  //   )
+  // }
 }
 
 export default OnboardingOverlay;
