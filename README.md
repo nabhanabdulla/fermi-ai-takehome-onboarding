@@ -1,10 +1,15 @@
 # 🧮 Interactive Math Tutor Onboarding
 
-> A polished, step-by-step onboarding prototype for an AI math tutoring app — built to showcase interaction design, canvas rendering, and micro-animat
+> A polished, step-by-step onboarding prototype for an AI math tutoring app — built to reduce learner dropoff
 
 **Note**: This project was done as takehome assignment for https://fermi.ai/
 
+- [Current onboarding steps post signup](https://www.figma.com/proto/amiQcb2YZuhgUTV3en4jJp/Fermi-ai-takehome-onboarding?node-id=1-20&p=f&t=9MS1cFe4tZzuroIr-1&scaling=contain&content-scaling=fixed&page-id=0%3A1)
+- [New onboarding - Demo video](https://www.youtube.com/watch?v=Ob4c8r7Bsik)
+
 **[▶ Live Demo](https://onboarding-task.lovable.app)**
+
+![Success Screen](assets/demo-success-screen.png)
 
 ---
 
