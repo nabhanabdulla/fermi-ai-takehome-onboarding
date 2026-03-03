@@ -1,6 +1,8 @@
-# 🧮 Fermi — Interactive Math Tutor Onboarding
+# 🧮 Interactive Math Tutor Onboarding
 
-> A polished, step-by-step onboarding prototype for an AI math tutoring app — built to showcase interaction design, canvas rendering, and micro-animation craft.
+> A polished, step-by-step onboarding prototype for an AI math tutoring app — built to showcase interaction design, canvas rendering, and micro-animat
+
+**Note**: This project was done as takehome assignment for https://fermi.ai/
 
 **[▶ Live Demo](https://onboarding-task.lovable.app)**
 
